@@ -1,5 +1,3 @@
-// Frontend API class for Payments
-
 import { PaymentRequest, PaymentResponse } from "../types";
 import { ApiError } from "./ApiError";
 import { API_BASE_URL } from "../config";
@@ -11,7 +9,6 @@ export async function createPayment(payload: PaymentRequest): Promise<PaymentRes
       body: JSON.stringify(payload),
     });
 
-    // optional: surface backend error message
     if (res.ok) {
      return res.json() as Promise<PaymentResponse>;
     }

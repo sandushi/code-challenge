@@ -18,7 +18,6 @@ export function usePaymentsHistory() {
       if (e?.name !== "AbortError") setError(e?.message || "Failed to load payments");
     } finally {
       setLoading(false);
-      console.log(data);
     }
   }, []);
 

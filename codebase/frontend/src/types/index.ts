@@ -16,7 +16,7 @@ export type PaymentRequest = {
   amount: number;
   card: {
     number: string;
-    expiry: string; // "MM/YY" or "MM/YYYY"
+    expiry: string; // "MM/YY"
     cvv: string;
   };
 };
