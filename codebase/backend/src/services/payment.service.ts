@@ -34,8 +34,26 @@ export class PaymentsService {
       const existing = this.repo.findByKey(req.idempotencyKey);
       if (existing) return existing;
     }
+    
+    let result: PaymentResult;
+    try {
+      result = await this.payment.charge(req);
+    } catch (err: any) {
+      // If processor already threw an AppError, just rethrow
+      if (err instanceof AppError) throw err;
 
-    const result = await this.payment.charge(req);
+      // Map common processor failures to structured errors
+      const code = String(err?.code ?? "");
+      const message = String(err?.message ?? "Payment failed");
+
+      // 402 - payment declined/required class of errors
+      if (err?.statusCode === 402 || code === "CARD_DECLINED" || code === "CARD_EXPIRED") {
+        throw paymentReq(code || "PAYMENT_FAILED", message);
+      }
+
+      // Anything else from the processor → treat as upstream failure (5xx)
+      throw upstreamFail("PROCESSOR_ERROR", "Payment processor unavailable");
+    }
     this.repo.save(result, req.idempotencyKey);
     return result;
   }
