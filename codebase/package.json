@@ -1,0 +1,13 @@
+{
+  "name": "energy-app",
+  "private": true,
+  "scripts": {
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:backend": "npm --prefix backend run start",
+    "start:frontend": "npm --prefix frontend run dev",
+    "build": "npm --prefix backend run build && npm --prefix frontend run build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
